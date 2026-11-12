@@ -48,9 +48,9 @@
 <div style="position:relative;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:32px;width:100%;box-sizing:border-box;max-width:1680px;margin:0 auto;padding:clamp(32px,6vw,80px) clamp(16px,5vw,80px) clamp(24px,4vw,48px)">
 <x-import component-from-global-scope="TECNODesignSystem_896f46.PowerLine" tone="dark" hint-size="auto,20px">Cruz del Eje, Córdoba</x-import>
 <h1 style="font:700 clamp(44px,12vw,112px)/1 Saira,sans-serif;letter-spacing:.02em;text-transform:uppercase;margin:0;max-width:900px;text-wrap:balance">Tu equipo, en buenas manos.</h1>
-<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-<x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="primary" tone="dark" onClick="{{ wa }}" dc-props="{{ big }}" hint-size="auto,56px"><span style="display:flex;gap:10px;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>Escribinos por WhatsApp</span></x-import>
-<x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="secondary" tone="dark" onClick="{{ goNuevos }}" dc-props="{{ big }}" hint-size="auto,56px">Ver celulares</x-import></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 16px;max-width:560px;width:100%">
+<x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="primary" tone="dark" onClick="{{ wa }}" dc-props="{{ bigFull }}" hint-size="auto,56px"><span style="display:flex;gap:10px;align-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>Escribinos por WhatsApp</span></x-import>
+<x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="secondary" tone="dark" onClick="{{ goNuevos }}" dc-props="{{ bigFull }}" hint-size="auto,56px">Ver celulares</x-import></div>
 </div></section>
 
 <section id="nuevos" style="background:#0A0A0A;border-top:1px solid #1C1C1E">
@@ -73,7 +73,11 @@
 <div style="font-size:clamp(12px,2.8vw,13px);color:#E5E5EA">Garantía de 12 meses</div>
 <div style="margin-top:8px;display:flex;flex-direction:column"><x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="secondary" tone="dark" onClick="{{ p.consult }}" dc-props="{{ fullW }}" hint-size="100%,44px">Consultá</x-import></div>
 </div></x-import>
-</sc-for></div></div></section>
+</sc-for></div>
+<sc-if value="{{ moreN.show }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;justify-content:center;margin-top:clamp(24px,4vw,40px)"><x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="secondary" tone="dark" onClick="{{ moreN.toggle }}" dc-props="{{ big }}" hint-size="auto,56px">{{ moreN.label }}</x-import></div>
+</sc-if>
+</div></section>
 
 <section id="usados" style="background:#fff;color:#0A0A0A">
 <div style="max-width:1680px;margin:0 auto;padding:clamp(64px,9vw,112px) clamp(16px,5vw,80px)">
@@ -92,7 +96,11 @@
 <div style="font-size:clamp(12px,2.8vw,13px);color:#3A3A3C">Garantía de 3 meses</div>
 <div style="margin-top:8px;display:flex;flex-direction:column"><x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="primary" tone="light" onClick="{{ p.consult }}" dc-props="{{ fullW }}" hint-size="100%,44px">Consultá</x-import></div>
 </div></x-import>
-</sc-for></div></div></section>
+</sc-for></div>
+<sc-if value="{{ moreU.show }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;justify-content:center;margin-top:clamp(24px,4vw,40px)"><x-import component-from-global-scope="TECNODesignSystem_896f46.Button" variant="secondary" tone="light" onClick="{{ moreU.toggle }}" dc-props="{{ big }}" hint-size="auto,56px">{{ moreU.label }}</x-import></div>
+</sc-if>
+</div></section>
 
 <section id="servicio" style="position:relative;overflow:hidden;background:#0A0A0A">
 <img src="assets/isotipo-blanco.svg" alt="" style="position:absolute;left:-10%;bottom:-30%;height:120%;opacity:.06">
@@ -150,7 +158,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { brand: 'Apple', lb: null };
+  state = { brand: 'Apple', lb: null, showN: false, showU: false };
   componentDidMount() { this._key = e => { if (e.key === 'Escape') this.closeLb(); }; window.addEventListener('keydown', this._key);
     const c = navigator.connection; if (c && c.saveData) return;
     const run = () => { this._pre = (this._allImgs || []).map(src => { const i = new Image(); i.decoding = 'async'; i.src = src; return i; }); };
@@ -208,21 +216,26 @@ class Component extends DCLogic {
     const openWa = t => window.open(WA + (t ? '?text=' + encodeURIComponent(t) : ''), '_blank', 'noopener');
     const consultTxt = p => 'Hola! Quiero consultar por el ' + p.name + ' (' + p.spec + ') a ' + p.price;
     const deco = tag => p => ({ ...p, consult: () => openWa(consultTxt(p)), bg: 'url("' + p.img + '")', srcOp: sel && sel.img === p.img ? 0 : 1, open: e => this.openLb(p, tag, e) });
+    const LIMIT = 4;
+    const more = (n, open, toggle) => ({ show: n > LIMIT, label: open ? 'Ver menos' : 'Ver más (' + (n - LIMIT) + ')', toggle });
+    const usadosAll = [
+      u('usado-iphone-17-pro', 'iPhone 17 Pro', '256 GB · Batería 100% · Impecable', '$2.499.999'),
+      u('usado-iphone-14', 'iPhone 14', '128 GB · Batería 92% · Impecable', '$749.999'),
+      u('usado-iphone-14-pro', 'iPhone 14 Pro', '128 GB · Batería 89% · Muy bueno', '$1.049.999'),
+      u('usado-iphone-11', 'iPhone 11', '64 GB · Batería 85% · Muy bueno', '$429.999'),
+      u('usado-iphone-xr', 'iPhone XR', '64 GB · Batería 84% · Muy bueno', '$329.999')
+    ].map(deco('Usado seleccionado · Garantía 3 meses'));
     return {
-      brands: ['Apple', 'Samsung', 'Motorola', 'Xiaomi'].map(b => ({ label: b, variant: b === brand ? 'primary' : 'secondary', pick: () => this.setState({ brand: b }) })),
-      nuevos: all.filter(p => p.brand === brand).map(deco('Nuevo · Garantía 12 meses')),
+      brands: ['Apple', 'Samsung', 'Motorola', 'Xiaomi'].map(b => ({ label: b, variant: b === brand ? 'primary' : 'secondary', pick: () => this.setState({ brand: b, showN: false }) })),
+      nuevos: (() => { const l = all.filter(p => p.brand === brand).map(deco('Nuevo · Garantía 12 meses')); return this.state.showN ? l : l.slice(0, LIMIT); })(),
+      moreN: more(all.filter(p => p.brand === brand).length, this.state.showN, () => this.setState(s => ({ showN: !s.showN }))),
+      moreU: more(usadosAll.length, this.state.showU, () => this.setState(s => ({ showU: !s.showU }))),
       lb: this.lbVals(), close: () => this.closeLb(),
       wa: () => openWa(), goNuevos: () => { const el = document.getElementById('nuevos'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' }); },
-      big: { style: { padding: '16px 32px', fontSize: 16 } }, fullW: { style: { width: '100%' } },
+      big: { style: { padding: '16px 32px', fontSize: 16 } }, bigFull: { style: { padding: '16px 32px', fontSize: 16, width: '100%' } }, fullW: { style: { width: '100%' } },
       cardFill: { style: { padding: 0, overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' } },
       cardSvc: { style: { padding: '32px 24px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12 } },
-      usados: [
-        u('usado-iphone-17-pro', 'iPhone 17 Pro', '256 GB · Batería 100% · Impecable', '$2.499.999'),
-        u('usado-iphone-14', 'iPhone 14', '128 GB · Batería 92% · Impecable', '$749.999'),
-        u('usado-iphone-14-pro', 'iPhone 14 Pro', '128 GB · Batería 89% · Muy bueno', '$1.049.999'),
-        u('usado-iphone-11', 'iPhone 11', '64 GB · Batería 85% · Muy bueno', '$429.999'),
-        u('usado-iphone-xr', 'iPhone XR', '64 GB · Batería 84% · Muy bueno', '$329.999')
-      ].map(deco('Usado seleccionado · Garantía 3 meses')),
+      usados: this.state.showU ? usadosAll : usadosAll.slice(0, LIMIT),
       servicios: [
         { icon: 'M12 18h.01M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z', title: 'Cambio de pantalla', text: 'En el día y con garantía.' },
         { icon: 'M6 7h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM22 11v2', title: 'Batería', text: 'Recuperá la autonomía de tu equipo.' },
