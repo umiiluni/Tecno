@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+:root{--font-display:'Saira',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif;
+--tracking-title:0.02em;--tracking-label:0.2em;
+--fs-display:64px;--fs-h1:48px;--fs-h2:32px;--fs-h3:24px;--fs-body:16px;--fs-small:14px;--fs-label:12px;--lh-tight:1.1; /* @kind other */ --lh-body:1.5; /* @kind other */}
+.t-title{font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:var(--tracking-title);line-height:var(--lh-tight)}
+.t-label{font-family:var(--font-display);font-weight:600;font-size:var(--fs-label);text-transform:uppercase;letter-spacing:var(--tracking-label)}
+.t-price{font-family:var(--font-display);font-weight:700;font-variant-numeric:tabular-nums}
+.t-body{font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body)}

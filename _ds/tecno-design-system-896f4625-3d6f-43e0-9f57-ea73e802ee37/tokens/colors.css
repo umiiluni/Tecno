@@ -1,0 +1,4 @@
+:root{--negro:#0A0A0A;--grafito:#1C1C1E;--acero:#3A3A3C;--gris-medio:#8E8E93;--niebla:#E5E5EA;--humo:#F5F5F7;--blanco:#FFFFFF;
+--bg-dark:var(--negro);--bg-dark-2:var(--grafito);--bg-light:var(--blanco);--bg-light-2:var(--humo);
+--fg-on-dark:var(--blanco);--fg-on-dark-muted:var(--gris-medio);--fg-on-light:var(--negro);--fg-on-light-muted:var(--acero);
+--border-dark:var(--acero);--border-light:var(--niebla);--surface-card-dark:var(--grafito);--surface-card-light:var(--humo);}
