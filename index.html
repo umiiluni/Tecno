@@ -110,9 +110,11 @@
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:clamp(12px,2.5vw,24px);margin-top:clamp(32px,5vw,48px)">
 <sc-for list="{{ servicios }}" as="s" hint-placeholder-count="4">
 <x-import component-from-global-scope="TECNODesignSystem_896f46.Card" tone="dark" dc-props="{{ cardSvc }}" hint-size="100%,200px">
+<div onClick="{{ s.go }}" role="link" tabindex="0" aria-label="{{ s.label }}" style="padding:32px 24px;flex:1;display:flex;flex-direction:column;gap:12px;cursor:pointer">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.icon }}"/></svg>
 <div style="font:600 18px Saira,sans-serif;letter-spacing:.02em;text-transform:uppercase;margin-top:8px">{{ s.title }}</div>
 <div style="color:#8E8E93;font-size:15px;line-height:1.5">{{ s.text }}</div>
+</div>
 </x-import>
 </sc-for></div>
 <div style="margin-top:48px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
@@ -216,6 +218,7 @@ class Component extends DCLogic {
     const openWa = t => window.open(WA + (t ? '?text=' + encodeURIComponent(t) : ''), '_blank', 'noopener');
     const consultTxt = p => 'Hola! Quiero consultar por el ' + p.name + ' (' + p.spec + ') a ' + p.price;
     const deco = tag => p => ({ ...p, consult: () => openWa(consultTxt(p)), bg: 'url("' + p.img + '")', srcOp: sel && sel.img === p.img ? 0 : 1, open: e => this.openLb(p, tag, e) });
+    const svcTxt = sv => sv.msg;
     const LIMIT = 4;
     const more = (n, open, toggle) => ({ show: n > LIMIT, label: open ? 'Ver menos' : 'Ver más (' + (n - LIMIT) + ')', toggle });
     const usadosAll = [
@@ -234,14 +237,14 @@ class Component extends DCLogic {
       wa: () => openWa(), goNuevos: () => { const el = document.getElementById('nuevos'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' }); },
       big: { style: { padding: '16px 32px', fontSize: 16 } }, bigFull: { style: { padding: '16px 32px', fontSize: 16, width: '100%' } }, fullW: { style: { width: '100%' } },
       cardFill: { style: { padding: 0, overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' } },
-      cardSvc: { style: { padding: '32px 24px', height: '100%', display: 'flex', flexDirection: 'column', gap: 12 } },
+      cardSvc: { style: { padding: 0, overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' } },
       usados: this.state.showU ? usadosAll : usadosAll.slice(0, LIMIT),
       servicios: [
-        { icon: 'M12 18h.01M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z', title: 'Cambio de pantalla', text: 'En el día y con garantía.' },
-        { icon: 'M6 7h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM22 11v2', title: 'Batería', text: 'Recuperá la autonomía de tu equipo.' },
-        { icon: 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94Z', title: 'Diagnóstico', text: 'Te decimos qué tiene y cuánto sale, antes de tocar nada.' },
-        { icon: 'M12 2v10M18.4 6.6a9 9 0 1 1-12.77.04', title: 'Placa, carga y software', text: 'Pin de carga, no enciende, actualizaciones y más.' }
-      ],
+        { icon: 'M12 18h.01M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z', msg: 'Hola! Quería consultar por el cambio de pantalla de mi celular. ¿Me pasan precio y tiempo?', title: 'Cambio de pantalla', text: 'En el día y con garantía.' },
+        { icon: 'M6 7h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM22 11v2', msg: 'Hola! Quería consultar por el cambio de batería de mi celular. ¿Me pasan precio y tiempo?', title: 'Batería', text: 'Recuperá la autonomía de tu equipo.' },
+        { icon: 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94Z', msg: 'Hola! Quería pedir un diagnóstico para mi celular. ¿Cómo hago para llevarlo?', title: 'Diagnóstico', text: 'Te decimos qué tiene y cuánto sale, antes de tocar nada.' },
+        { icon: 'M12 2v10M18.4 6.6a9 9 0 1 1-12.77.04', msg: 'Hola! Quería consultar por una reparación de placa, carga o software de mi celular.', title: 'Placa, carga y software', text: 'Pin de carga, no enciende, actualizaciones y más.' }
+      ].map(sv => ({ ...sv, label: 'Consultar por ' + sv.title + ' por WhatsApp', go: () => openWa(svcTxt(sv)) })),
       locales: [
         { addr: 'San Martín 272', go: () => window.open('https://www.google.com/maps/search/?api=1&query=San+Mart%C3%ADn+272+Cruz+del+Eje', '_blank', 'noopener') },
         { addr: 'Alvear 325', go: () => window.open('https://www.google.com/maps/search/?api=1&query=Alvear+325+Cruz+del+Eje', '_blank', 'noopener') }
